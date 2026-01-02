@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import {
   CircleUserRound,
   Heart,
@@ -27,6 +29,8 @@ interface DreamsMapHeaderProps {
 }
 
 export function DreamsMapHeader({ onWallpaperClick, onAddCategoryClick }: DreamsMapHeaderProps) {
+  const router = useRouter();
+
   return (
     <motion.header
       initial={{ opacity: 0, y: -20 }}
@@ -126,20 +130,20 @@ export function DreamsMapHeader({ onWallpaperClick, onAddCategoryClick }: Dreams
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <div className="p-[8px]">
-                  <DropdownMenuItem onSelect={() => {}}>
+                  <DropdownMenuItem onSelect={() => router.push('/profile')}>
                     <User size={16} className="mr-[8px]" />
                     <span>My Profile</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => {}}>
+                  <DropdownMenuItem onSelect={() => router.push('/favorites')}>
                     <Heart size={16} className="mr-[8px]" />
                     <span>My Favorite Dreams</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => {}}>
+                  <DropdownMenuItem onSelect={() => router.push('/settings')}>
                     <Settings size={16} className="mr-[8px]" />
                     <span>Settings</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem variant="destructive" onSelect={() => {}}>
+                  <DropdownMenuItem variant="destructive" onSelect={() => router.push('/login')}>
                     <LogOut size={16} className="mr-[8px]" />
                     <span>Sign out</span>
                   </DropdownMenuItem>
