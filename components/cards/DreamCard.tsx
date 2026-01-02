@@ -1,4 +1,4 @@
-import { Check, Trash2, Sparkles } from 'lucide-react';
+import { Check, Pencil, Trash2, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 import type { Dream } from '@/lib/types';
 
@@ -8,6 +8,7 @@ interface DreamCardProps {
   index: number;
   onToggle: () => void;
   onDelete: () => void;
+  onEdit: () => void;
 }
 
 export default function DreamCard({
@@ -16,6 +17,7 @@ export default function DreamCard({
   index,
   onToggle,
   onDelete,
+  onEdit,
 }: DreamCardProps) {
   return (
     <motion.div
@@ -70,14 +72,28 @@ export default function DreamCard({
               )}
             </motion.button>
 
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={onDelete}
-              className="opacity-0 group-hover:opacity-100 transition-opacity text-[#9CA3AF] hover:text-[#EF4444]"
-            >
-              <Trash2 size={16} />
-            </motion.button>
+            <div className="flex items-center gap-[8px] opacity-0 group-hover:opacity-100 transition-opacity">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={onEdit}
+                className="text-[#9CA3AF] hover:text-[#111827]"
+                aria-label="Edit dream"
+                title="Edit dream"
+              >
+                <Pencil size={16} />
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={onDelete}
+                className="text-[#9CA3AF] hover:text-[#EF4444]"
+                aria-label="Remove dream"
+                title="Remove dream"
+              >
+                <Trash2 size={16} />
+              </motion.button>
+            </div>
           </div>
 
           {/* Image */}
@@ -136,7 +152,7 @@ export default function DreamCard({
             className="absolute top-[12px] right-[12px]"
           >
             <div className="bg-[#22C55E] text-[#FFFFFF] text-[12px] px-[8px] py-[4px] rounded-full font-bold shadow-lg">
-              ✓ Conquistado!
+              ✓ Achieved!
             </div>
           </motion.div>
         )}

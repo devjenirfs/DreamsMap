@@ -1,19 +1,15 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { X, Save } from 'lucide-react';
+import { Save, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 
 import type { Category } from '@/lib/types';
 
-interface CategoryModalProps {
+interface EditCategoryModalProps {
+  category: Category;
   onClose: () => void;
-  onCreate: (category: Category) => void;
-}
-
-function normalizeEmoji(input: string): string {
-  const trimmed = input.trim();
-  return trimmed.length > 0 ? trimmed : '✨';
+  onSave: (categoryId: string, updates: Pick<Category, 'title' | 'color' | 'gradient'>) => void;
 }
 
 const COLOR_OPTIONS: Array<{ label: string; value: string }> = [
@@ -30,11 +26,23 @@ const COLOR_OPTIONS: Array<{ label: string; value: string }> = [
   { label: 'Red', value: '#EF4444' },
 ];
 
-export default function CategoryModal({ onClose, onCreate }: CategoryModalProps) {
-  const [title, setTitle] = useState('');
-  const [emoji, setEmoji] = useState('✨');
-  const [fromColor, setFromColor] = useState('#A855F7');
-  const [toColor, setToColor] = useState('#4F46E5');
+function extractGradientColors(gradient: string): { from?: string; to?: string } {
+  // Expected: from-[#A855F7] to-[#4F46E5]
+  const fromMatch = gradient.match(/from-\[#([0-9a-fA-F]{6})\]/);
+  const toMatch = gradient.match(/to-\[#([0-9a-fA-F]{6})\]/);
+
+  const from = fromMatch ? `#${fromMatch[1]}`.toUpperCase() : undefined;
+  const to = toMatch ? `#${toMatch[1]}`.toUpperCase() : undefined;
+
+  return { from, to };
+}
+
+export default function EditCategoryModal({ category, onClose, onSave }: EditCategoryModalProps) {
+  const { from: defaultFrom, to: defaultTo } = extractGradientColors(category.gradient);
+
+  const [title, setTitle] = useState(category.title);
+  const [fromColor, setFromColor] = useState(defaultFrom ?? category.color);
+  const [toColor, setToColor] = useState(defaultTo ?? '#4F46E5');
 
   const previewGradientClass = useMemo(() => {
     return `bg-gradient-to-r from-[${fromColor}] to-[${toColor}]`;
@@ -46,19 +54,12 @@ export default function CategoryModal({ onClose, onCreate }: CategoryModalProps)
     e.preventDefault();
     if (!canSubmit) return;
 
-    const from = fromColor;
-    const to = toColor;
-
-    const newCategory: Category = {
-      id: crypto.randomUUID(),
+    onSave(category.id, {
       title: title.trim(),
-      emoji: normalizeEmoji(emoji),
-      color: from,
-      gradient: `from-[${from}] to-[${to}]`,
-      dreams: [],
-    };
+      color: fromColor,
+      gradient: `from-[${fromColor}] to-[${toColor}]`,
+    });
 
-    onCreate(newCategory);
     onClose();
   };
 
@@ -84,10 +85,10 @@ export default function CategoryModal({ onClose, onCreate }: CategoryModalProps)
           <div className={`p-[24px] ${previewGradientClass}`}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-[12px]">
-                <span className="text-[32px]">{normalizeEmoji(emoji)}</span>
+                <span className="text-[32px]">{category.emoji}</span>
                 <div>
-                  <h2 className="text-[24px] font-bold text-[#FFFFFF]">Create Category</h2>
-                  <p className="text-[#FFFFFFE6] text-[14px] mt-[4px]">Set a name, emoji, and colors</p>
+                  <h2 className="text-[24px] font-bold text-[#FFFFFF]">Edit Category</h2>
+                  <p className="text-[#FFFFFFE6] text-[14px] mt-[4px]">Edit the title and colors</p>
                 </div>
               </div>
               <button
@@ -106,25 +107,15 @@ export default function CategoryModal({ onClose, onCreate }: CategoryModalProps)
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. Spirituality"
                 className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] focus:outline-none focus:border-[#A855F7] transition-colors"
                 required
-              />
-            </div>
-
-            <div>
-              <label className="block text-[14px] font-semibold text-[#374151] mb-[8px]">Emoji</label>
-              <input
-                value={emoji}
-                onChange={(e) => setEmoji(e.target.value)}
-                placeholder="✨"
-                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] focus:outline-none focus:border-[#A855F7] transition-colors"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-[12px]">
               <div>
                 <label className="block text-[14px] font-semibold text-[#374151] mb-[8px]">Color</label>
+
                 <select
                   value={fromColor}
                   onChange={(e) => setFromColor(e.target.value)}
@@ -153,12 +144,6 @@ export default function CategoryModal({ onClose, onCreate }: CategoryModalProps)
               </div>
             </div>
 
-            <div className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-[12px] p-[16px]">
-              <p className="text-[12px] text-[#6B7280]">
-                Pick two colors for the category gradient.
-              </p>
-            </div>
-
             <div className="flex items-center justify-end gap-[12px] pt-[8px]">
               <button
                 type="button"
@@ -177,7 +162,7 @@ export default function CategoryModal({ onClose, onCreate }: CategoryModalProps)
                 }`}
               >
                 <Save size={18} />
-                Create
+                Save
               </button>
             </div>
           </form>

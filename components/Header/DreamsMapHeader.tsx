@@ -44,10 +44,10 @@ export default function DreamsMapHeader({ onWallpaperClick, onAddCategoryClick }
             </div>
             <div>
               <h1 className="text-[32px] font-bold bg-gradient-to-r from-[#9333EA] via-[#DB2777] to-[#2563EB] bg-clip-text text-transparent">
-                Meu Mapa dos Sonhos
+                My Dream Map
               </h1>
               <p className="text-[#4B5563] text-[14px] mt-[4px]">
-                Visualize, afirme e conquiste seus objetivos
+                Visualize, affirm, and achieve your goals
               </p>
             </div>
           </div>
@@ -61,7 +61,7 @@ export default function DreamsMapHeader({ onWallpaperClick, onAddCategoryClick }
                 className="flex items-center gap-[8px] bg-[#FFFFFF] border border-[#E5E7EB] text-[#111827] px-[16px] py-[8px] rounded-full shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)]"
               >
                 <Plus size={18} />
-                <span className="font-semibold">Adicionar Categoria</span>
+                <span className="font-semibold">Add Category</span>
               </motion.button>
             )}
             {onWallpaperClick && (
@@ -72,7 +72,7 @@ export default function DreamsMapHeader({ onWallpaperClick, onAddCategoryClick }
                 className="flex items-center gap-[8px] bg-gradient-to-r from-[#6366F1] to-[#9333EA] text-[#fff] px-[16px] py-[8px] rounded-full shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)]"
               >
                 <Wallpaper size={18} />
-                <span className="font-semibold">Ver Wallpaper</span>
+                <span className="font-semibold">View Wallpaper</span>
               </motion.button>
             )}
             <motion.div
@@ -80,7 +80,7 @@ export default function DreamsMapHeader({ onWallpaperClick, onAddCategoryClick }
               className="flex items-center gap-[8px] bg-gradient-to-r from-[#A855F7] to-[#EC4899] text-[#fff] px-[16px] py-[8px] rounded-full shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)]"
             >
               <Star size={18} fill="currentColor" />
-              <span className="font-semibold">Seu melhor está por vir</span>
+              <span className="font-semibold">Your best is yet to come</span>
             </motion.div>
           </div>
         </div>

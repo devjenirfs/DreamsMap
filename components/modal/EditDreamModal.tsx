@@ -1,38 +1,40 @@
-/* eslint-disable react/no-unescaped-entities */
 'use client';
 
 import { useState } from 'react';
 import { X, Image as ImageIcon, Sparkles, Save } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+
 import type { Category, Dream } from '@/lib/types';
 
-interface AddDreamModalProps {
+interface EditDreamModalProps {
   category: Category;
+  dream: Dream;
   onClose: () => void;
-  onAdd: (categoryId: string, dream: Dream) => void;
+  onSave: (
+    categoryId: string,
+    dreamId: string,
+    updates: Pick<Dream, 'title' | 'description' | 'affirmation' | 'imageUrl'>
+  ) => void;
 }
 
-export default function AddDreamModal({ category, onClose, onAdd }: AddDreamModalProps) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [affirmation, setAffirmation] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+export default function EditDreamModal({ category, dream, onClose, onSave }: EditDreamModalProps) {
+  const [title, setTitle] = useState(dream.title);
+  const [description, setDescription] = useState(dream.description ?? '');
+  const [affirmation, setAffirmation] = useState(dream.affirmation ?? '');
+  const [imageUrl, setImageUrl] = useState(dream.imageUrl ?? '');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!title.trim()) return;
 
-    const newDream: Dream = {
-      id: Date.now().toString(),
+    onSave(category.id, dream.id, {
       title: title.trim(),
       description: description.trim() || undefined,
       affirmation: affirmation.trim() || undefined,
       imageUrl: imageUrl.trim() || undefined,
-      completed: false,
-    };
+    });
 
-    onAdd(category.id, newDream);
     onClose();
   };
 
@@ -61,17 +63,14 @@ export default function AddDreamModal({ category, onClose, onAdd }: AddDreamModa
               <div className="flex items-center gap-[12px]">
                 <span className="text-[32px]">{category.emoji}</span>
                 <div>
-                  <h2 className="text-[32px] font-bold text-[#FFFFFF]">
-                    Add Dream
-                  </h2>
-                  <p className="text-[#FFFFFFE6] text-[14px] mt-[4px]">
-                    {category.title}
-                  </p>
+                  <h2 className="text-[24px] font-bold text-[#FFFFFF]">Edit Dream</h2>
+                  <p className="text-[#FFFFFFE6] text-[14px] mt-[4px]">{category.title}</p>
                 </div>
               </div>
               <button
                 onClick={onClose}
                 className="text-[#FFFFFF] hover:bg-[#FFFFFF33] rounded-full p-[8px] transition-colors"
+                type="button"
               >
                 <X size={24} />
               </button>
@@ -87,7 +86,6 @@ export default function AddDreamModal({ category, onClose, onAdd }: AddDreamModa
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. Master React & Next.js"
                 className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] focus:outline-none focus:border-[#A855F7] transition-colors"
                 required
               />
@@ -99,7 +97,6 @@ export default function AddDreamModal({ category, onClose, onAdd }: AddDreamModa
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Add details about this dream..."
                 rows={3}
                 className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] focus:outline-none focus:border-[#A855F7] transition-colors resize-none"
               />
@@ -115,12 +112,8 @@ export default function AddDreamModal({ category, onClose, onAdd }: AddDreamModa
                 type="text"
                 value={affirmation}
                 onChange={(e) => setAffirmation(e.target.value)}
-                placeholder="e.g. I am a reference in Front-end and Design"
                 className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] focus:outline-none focus:border-[#A855F7] transition-colors"
               />
-              <p className="text-[12px] text-[#6B7280] mt-[8px]">
-                A present-tense sentence as if you already achieved it
-              </p>
             </div>
 
             {/* Image URL */}
@@ -133,33 +126,13 @@ export default function AddDreamModal({ category, onClose, onAdd }: AddDreamModa
                 type="url"
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://example.com/image.jpg"
                 className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] focus:outline-none focus:border-[#A855F7] transition-colors"
               />
               {imageUrl && (
                 <div className="mt-[12px] rounded-[12px] overflow-hidden border-[2px] border-[#D1D5DB]">
-                  <img
-                    src={imageUrl}
-                    alt="Preview"
-                    className="w-full h-[192px] object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = '';
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
+                  <img src={imageUrl} alt="Preview" className="w-full h-[192px] object-cover" />
                 </div>
               )}
-            </div>
-
-            {/* Tips */}
-            <div className="bg-[#F3E8FF] border border-[#E0C3FC] rounded-[12px] p-[16px]">
-              <p className="text-[14px] text-[#7C3AED] font-medium mb-[8px]">💡 Tips for a powerful dream:</p>
-              <ul className="text-[14px] text-[#6B21A8] space-y-[4px]">
-                <li>• Be specific in the title</li>
-                <li>• Use present-tense affirmations</li>
-                <li>• Choose images that inspire you</li>
-                <li>• Review your dreams regularly</li>
-              </ul>
             </div>
           </form>
 
@@ -168,7 +141,7 @@ export default function AddDreamModal({ category, onClose, onAdd }: AddDreamModa
             <button
               type="button"
               onClick={onClose}
-              className="px-[24px] py-[12px] bg-[#FFFFFF] border-[2px] border-[#D1D5DB] text-[#374151] rounded-[12px] font-semibold hover:bg-[#F3E4FF] transition-colors"
+              className="px-[24px] py-[12px] bg-[#FFFFFF] border-[2px] border-[#D1D5DB] text-[#374151] rounded-[12px] font-semibold hover:bg-[#F3F4F6] transition-colors"
             >
               Cancel
             </button>
@@ -177,7 +150,7 @@ export default function AddDreamModal({ category, onClose, onAdd }: AddDreamModa
               className={`px-[24px] py-[12px] bg-gradient-to-r ${category.gradient} text-[#FFFFFF] rounded-[12px] font-semibold hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] transition-all flex items-center gap-[8px]`}
             >
               <Save size={18} />
-              Add Dream
+              Save
             </button>
           </div>
         </motion.div>

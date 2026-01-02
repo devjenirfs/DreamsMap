@@ -52,7 +52,7 @@ export default function WallpaperView({ categories, onBack }: WallpaperViewProps
           className="flex items-center gap-[8px] bg-[#FFFFFF1A] backdrop-blur-[20px] text-[#FFFFFF] px-[16px] py-[8px] rounded-full border border-[#FFFFFF33] hover:bg-[#FFFFFF33] transition-colors"
         >
           <ArrowLeft size={18} />
-          <span className="font-semibold">Voltar</span>
+          <span className="font-semibold">Back</span>
         </motion.button>
 
         <motion.button
@@ -60,12 +60,12 @@ export default function WallpaperView({ categories, onBack }: WallpaperViewProps
           whileTap={{ scale: 0.95 }}
           onClick={() => {
             // Take screenshot functionality would go here
-            alert('Dica: Use Print Screen ou Cmd+Shift+3 (Mac) para capturar a tela!');
+            alert('Tip: Use your system screenshot shortcut to capture your screen.');
           }}
           className="flex items-center gap-[8px] bg-[#FFFFFF1A] backdrop-blur-[20px] text-[#FFFFFF] px-[16px] py-[8px] rounded-full border border-[#FFFFFF33] hover:bg-[#FFFFFF33] transition-colors"
         >
           <Download size={18} />
-          <span className="font-semibold">Salvar como Wallpaper</span>
+          <span className="font-semibold">Save as Wallpaper</span>
         </motion.button>
       </div>
 
@@ -126,13 +126,11 @@ export default function WallpaperView({ categories, onBack }: WallpaperViewProps
               ✨
             </motion.div>
             <h1 className="text-[40px] font-bold text-[#FFFFFF] mb-[16px] leading-tight">
-              Eu sou a arquiteta
+              I am the architect
               <br />
-              do meu destino
+              of my destiny
             </h1>
-            <p className="text-[24px] text-[#FFFFFFE6] font-medium">
-              Todos os meus sonhos se realizam
-            </p>
+            <p className="text-[24px] text-[#FFFFFFE6] font-medium">All my dreams come true</p>
             <motion.div
               animate={{
                 scale: [1, 1.05, 1],
@@ -145,7 +143,7 @@ export default function WallpaperView({ categories, onBack }: WallpaperViewProps
             >
               <div className="flex items-center gap-[8px] bg-[#FFFFFF33] backdrop-blur-[20px] px-[24px] py-[12px] rounded-full border border-[#FFFFFF4D] mt-[16px]">
                 <Sparkles size={20} className="text-[#FDE68A]" />
-                <span className="text-[#FFFFFF] font-bold">2026 - Meu Ano</span>
+                <span className="text-[#FFFFFF] font-bold">2026 - My Year</span>
                 <Sparkles size={20} className="text-[#FDE68A]" />
               </div>
             </motion.div>
@@ -241,7 +239,7 @@ function QuadrantCard({ category, position }: QuadrantCardProps) {
       {/* Footer */}
       <div className="mt-[16px] pt-[16px] border-t border-[#FFFFFF33]">
         <p className="text-[#FFFFFF99] text-[12px] text-center">
-          {category.dreams.filter(d => d.completed).length} de {category.dreams.length} conquistados
+          {category.dreams.filter((d) => d.completed).length} of {category.dreams.length} achieved
         </p>
       </div>
     </motion.div>
