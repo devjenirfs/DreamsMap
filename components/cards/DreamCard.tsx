@@ -75,7 +75,7 @@ export default function DreamCard({
               )}
             </motion.button>
 
-            <div className="flex items-center gap-[8px] opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="flex items-center gap-[8px] opacity-100 pointer-events-auto transition-opacity sm:opacity-0 sm:pointer-events-none sm:group-hover:opacity-100 sm:group-hover:pointer-events-auto">
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
