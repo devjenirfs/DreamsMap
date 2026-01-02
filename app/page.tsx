@@ -1,12 +1,13 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
-import DreamsMapHeader from '@/components/Header/DreamsMapHeader';
+import DreamsMapHeader from '@/components/layout/Header/DreamsMapHeader';
 import CategorySection from '@/components/sections/CategorySection';
 import AddDreamModal from '@/components/modal/DreamModal';
 import WallpaperView from '@/components/sections/WallpaperView';
 import CategoryModal from '@/components/modal/CategoryModal';
 import EditCategoryModal from '@/components/modal/EditCategoryModal';
 import EditDreamModal from '@/components/modal/EditDreamModal';
+import Footer from '@/components/layout/Footer/footer';
 
 import type { Category, Dream } from '@/lib/types';
 import { initialCategories } from '@/lib/seed';
@@ -241,6 +242,8 @@ export default function DreamsMap() {
           onSave={handleUpdateDream}
         />
       )}
+
+      <Footer />
     </div>
   );
 }

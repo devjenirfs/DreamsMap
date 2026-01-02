@@ -107,7 +107,7 @@ export default function CategoryModal({ onClose, onCreate }: CategoryModalProps)
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. Spirituality"
-                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] focus:outline-none focus:border-[#A855F7] transition-colors"
+                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] text-[#000000] focus:outline-none focus:border-[#A855F7] transition-colors"
                 required
               />
             </div>
@@ -118,7 +118,7 @@ export default function CategoryModal({ onClose, onCreate }: CategoryModalProps)
                 value={emoji}
                 onChange={(e) => setEmoji(e.target.value)}
                 placeholder="✨"
-                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] focus:outline-none focus:border-[#A855F7] transition-colors"
+                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] text-[#000000] focus:outline-none focus:border-[#A855F7] transition-colors"
               />
             </div>
 
@@ -128,7 +128,7 @@ export default function CategoryModal({ onClose, onCreate }: CategoryModalProps)
                 <select
                   value={fromColor}
                   onChange={(e) => setFromColor(e.target.value)}
-                  className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] bg-[#FFFFFF] focus:outline-none focus:border-[#A855F7] transition-colors"
+                  className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] bg-[#FFFFFF] text-[#000000] focus:outline-none focus:border-[#A855F7] transition-colors"
                 >
                   {COLOR_OPTIONS.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -142,7 +142,7 @@ export default function CategoryModal({ onClose, onCreate }: CategoryModalProps)
                 <select
                   value={toColor}
                   onChange={(e) => setToColor(e.target.value)}
-                  className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] bg-[#FFFFFF] focus:outline-none focus:border-[#A855F7] transition-colors"
+                  className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] bg-[#FFFFFF] text-[#000000] focus:outline-none focus:border-[#A855F7] transition-colors"
                 >
                   {COLOR_OPTIONS.map((opt) => (
                     <option key={opt.value} value={opt.value}>
