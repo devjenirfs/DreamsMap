@@ -78,10 +78,7 @@ export default function WallpaperView({ categories, onBack }: WallpaperViewProps
           transition={{ delay: 0.2 }}
           className="col-span-1 row-span-1 flex flex-col"
         >
-          <QuadrantCard
-            category={topLeftCategory}
-            position="top-left"
-          />
+          <QuadrantCard category={topLeftCategory} />
         </motion.div>
 
         {/* Top Center - Spacer */}
@@ -94,10 +91,7 @@ export default function WallpaperView({ categories, onBack }: WallpaperViewProps
           transition={{ delay: 0.3 }}
           className="col-span-1 row-span-1 flex flex-col"
         >
-          <QuadrantCard
-            category={topRightCategory}
-            position="top-right"
-          />
+          <QuadrantCard category={topRightCategory} />
         </motion.div>
 
         {/* Middle Left - Spacer */}
@@ -160,10 +154,7 @@ export default function WallpaperView({ categories, onBack }: WallpaperViewProps
           transition={{ delay: 0.4 }}
           className="col-span-1 row-span-1 flex flex-col"
         >
-          <QuadrantCard
-            category={bottomLeftCategory}
-            position="bottom-left"
-          />
+          <QuadrantCard category={bottomLeftCategory} />
         </motion.div>
 
         {/* Bottom Center - Spacer */}
@@ -176,10 +167,7 @@ export default function WallpaperView({ categories, onBack }: WallpaperViewProps
           transition={{ delay: 0.5 }}
           className="col-span-1 row-span-1 flex flex-col"
         >
-          <QuadrantCard
-            category={bottomRightCategory}
-            position="bottom-right"
-          />
+          <QuadrantCard category={bottomRightCategory} />
         </motion.div>
       </div>
     </div>
@@ -188,10 +176,9 @@ export default function WallpaperView({ categories, onBack }: WallpaperViewProps
 
 interface QuadrantCardProps {
   category?: Category;
-  position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 }
 
-function QuadrantCard({ category, position }: QuadrantCardProps) {
+function QuadrantCard({ category }: QuadrantCardProps) {
   if (!category) return null;
 
   return (
@@ -220,7 +207,7 @@ function QuadrantCard({ category, position }: QuadrantCardProps) {
                 <div className="flex items-start gap-[8px]">
                   <Sparkles size={14} className="text-[#FDE68A] mt-1 flex-shrink-0" />
                   <p className="text-[#FFFFFFE6] text-[14px] italic leading-relaxed">
-                    "{dream.affirmation}"
+                    &ldquo;{dream.affirmation}&rdquo;
                   </p>
                 </div>
               </div>

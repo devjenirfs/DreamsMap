@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronUp, Pencil, Plus, Trash2 } from 'lucide-react';
 import { motion } from 'motion/react';
-import type { Category, Dream } from '@/lib/types';
+import type { Category } from '@/lib/types';
 import DreamCard from '../cards/DreamCard';
 
 interface CategorySectionProps {

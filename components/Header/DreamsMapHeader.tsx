@@ -1,4 +1,4 @@
-import { Plus, Sparkles, Star, Wallpaper } from 'lucide-react';
+import { Plus, Star, Wallpaper } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface DreamsMapHeaderProps {

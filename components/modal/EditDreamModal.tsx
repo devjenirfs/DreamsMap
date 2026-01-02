@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X, Image as ImageIcon, Sparkles, Save } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -22,6 +22,38 @@ export default function EditDreamModal({ category, dream, onClose, onSave }: Edi
   const [description, setDescription] = useState(dream.description ?? '');
   const [affirmation, setAffirmation] = useState(dream.affirmation ?? '');
   const [imageUrl, setImageUrl] = useState(dream.imageUrl ?? '');
+  const [imageUrlInput, setImageUrlInput] = useState(() => (dream.imageUrl?.startsWith('data:') ? '' : dream.imageUrl ?? ''));
+  const [isReadingImage, setIsReadingImage] = useState(false);
+
+  useEffect(() => {
+    setTitle(dream.title);
+    setDescription(dream.description ?? '');
+    setAffirmation(dream.affirmation ?? '');
+    setImageUrl(dream.imageUrl ?? '');
+    setImageUrlInput(dream.imageUrl?.startsWith('data:') ? '' : dream.imageUrl ?? '');
+  }, [dream]);
+
+  const handleImageFileChange = async (file: File | null) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) return;
+
+    const MAX_BYTES = 2 * 1024 * 1024; // 2MB
+    if (file.size > MAX_BYTES) return;
+
+    setIsReadingImage(true);
+    try {
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('Failed to read file'));
+        reader.onload = () => resolve(String(reader.result ?? ''));
+        reader.readAsDataURL(file);
+      });
+      setImageUrl(dataUrl);
+      setImageUrlInput('');
+    } finally {
+      setIsReadingImage(false);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,7 +118,7 @@ export default function EditDreamModal({ category, dream, onClose, onSave }: Edi
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] focus:outline-none focus:border-[#A855F7] transition-colors"
+                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] text-[#000000] focus:outline-none focus:border-[#A855F7] transition-colors"
                 required
               />
             </div>
@@ -98,7 +130,7 @@ export default function EditDreamModal({ category, dream, onClose, onSave }: Edi
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={3}
-                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] focus:outline-none focus:border-[#A855F7] transition-colors resize-none"
+                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] text-[#000000] focus:outline-none focus:border-[#A855F7] transition-colors resize-none"
               />
             </div>
 
@@ -112,47 +144,97 @@ export default function EditDreamModal({ category, dream, onClose, onSave }: Edi
                 type="text"
                 value={affirmation}
                 onChange={(e) => setAffirmation(e.target.value)}
-                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] focus:outline-none focus:border-[#A855F7] transition-colors"
+                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] text-[#000000] focus:outline-none focus:border-[#A855F7] transition-colors"
               />
             </div>
 
-            {/* Image URL */}
+            {/* Image */}
             <div>
               <label className="flex items-center gap-[8px] text-[14px] font-semibold text-[#374151] mb-[8px]">
                 <ImageIcon size={16} style={{ color: category.color }} />
-                Image URL (optional)
+                Image (optional)
               </label>
-              <input
-                type="url"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] focus:outline-none focus:border-[#A855F7] transition-colors"
-              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-[12px]">
+                <div>
+                  <p className="text-[12px] text-[#6B7280] mb-[6px]">Upload photo</p>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.currentTarget.files?.[0] ?? null;
+                      void handleImageFileChange(file);
+                      e.currentTarget.value = '';
+                    }}
+                    className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] text-[#000000] focus:outline-none focus:border-[#A855F7] transition-colors bg-[#FFFFFF]"
+                  />
+                  <p className="text-[12px] text-[#6B7280] mt-[6px]">Max 2MB (stored in your browser)</p>
+                </div>
+
+                <div>
+                  <p className="text-[12px] text-[#6B7280] mb-[6px]">Or paste an URL</p>
+                  <input
+                    type="url"
+                    value={imageUrlInput}
+                    onChange={(e) => {
+                      const next = e.target.value;
+                      setImageUrlInput(next);
+                      setImageUrl(next);
+                    }}
+                    className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] text-[#000000] focus:outline-none focus:border-[#A855F7] transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between mt-[10px]">
+                <p className="text-[12px] text-[#6B7280]">{isReadingImage ? 'Loading image…' : ' '}</p>
+                {imageUrl && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImageUrl('');
+                      setImageUrlInput('');
+                    }}
+                    className="text-[12px] font-semibold text-[#6B7280] hover:text-[#111827]"
+                  >
+                    Remove image
+                  </button>
+                )}
+              </div>
+
               {imageUrl && (
                 <div className="mt-[12px] rounded-[12px] overflow-hidden border-[2px] border-[#D1D5DB]">
-                  <img src={imageUrl} alt="Preview" className="w-full h-[192px] object-cover" />
+                  <img
+                    src={imageUrl}
+                    alt="Preview"
+                    className="w-full h-[192px] object-cover"
+                    onError={() => {
+                      setImageUrl('');
+                      setImageUrlInput('');
+                    }}
+                  />
                 </div>
               )}
             </div>
-          </form>
 
-          {/* Footer */}
-          <div className="bg-[#F9FAFB] px-[24px] py-[16px] flex items-center justify-end gap-[12px] border-t border-[#E5E7EB]">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-[24px] py-[12px] bg-[#FFFFFF] border-[2px] border-[#D1D5DB] text-[#374151] rounded-[12px] font-semibold hover:bg-[#F3F4F6] transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className={`px-[24px] py-[12px] bg-gradient-to-r ${category.gradient} text-[#FFFFFF] rounded-[12px] font-semibold hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] transition-all flex items-center gap-[8px]`}
-            >
-              <Save size={18} />
-              Save
-            </button>
-          </div>
+            {/* Footer */}
+            <div className="bg-[#F9FAFB] px-[24px] py-[16px] flex items-center justify-end gap-[12px] border-t border-[#E5E7EB]">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-[24px] py-[12px] bg-[#FFFFFF] border-[2px] border-[#D1D5DB] text-[#374151] rounded-[12px] font-semibold hover:bg-[#F3F4F6] transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className={`px-[24px] py-[12px] bg-gradient-to-r ${category.gradient} text-[#FFFFFF] rounded-[12px] font-semibold hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] transition-all flex items-center gap-[8px]`}
+              >
+                <Save size={18} />
+                Save
+              </button>
+            </div>
+          </form>
         </motion.div>
       </div>
     </AnimatePresence>

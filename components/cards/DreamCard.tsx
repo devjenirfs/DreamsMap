@@ -1,5 +1,6 @@
 import { Check, Pencil, Trash2, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useState } from 'react';
 import type { Dream } from '@/lib/types';
 
 interface DreamCardProps {
@@ -19,6 +20,8 @@ export default function DreamCard({
   onDelete,
   onEdit,
 }: DreamCardProps) {
+  const [imageFailed, setImageFailed] = useState(false);
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -97,12 +100,13 @@ export default function DreamCard({
           </div>
 
           {/* Image */}
-          {dream.imageUrl && (
+          {dream.imageUrl && !imageFailed && (
             <div className="mb-[12px] rounded-[12px] overflow-hidden">
               <img
                 src={dream.imageUrl}
                 alt={dream.title}
                 className="w-full h-[128px] object-cover"
+                onError={() => setImageFailed(true)}
               />
             </div>
           )}
@@ -137,7 +141,7 @@ export default function DreamCard({
                   className="text-[14px] font-medium italic"
                   style={{ color: categoryColor }}
                 >
-                  "{dream.affirmation}"
+                  &ldquo;{dream.affirmation}&rdquo;
                 </p>
               </div>
             </div>

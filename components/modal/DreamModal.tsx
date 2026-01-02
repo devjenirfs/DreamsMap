@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 'use client';
 
 import { useState } from 'react';
@@ -17,6 +16,31 @@ export default function AddDreamModal({ category, onClose, onAdd }: AddDreamModa
   const [description, setDescription] = useState('');
   const [affirmation, setAffirmation] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [imageUrlInput, setImageUrlInput] = useState('');
+  const [isReadingImage, setIsReadingImage] = useState(false);
+
+  const handleImageFileChange = async (file: File | null) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) return;
+
+    // Stored in localStorage; keep conservative.
+    const MAX_BYTES = 2 * 1024 * 1024; // 2MB
+    if (file.size > MAX_BYTES) return;
+
+    setIsReadingImage(true);
+    try {
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('Failed to read file'));
+        reader.onload = () => resolve(String(reader.result ?? ''));
+        reader.readAsDataURL(file);
+      });
+      setImageUrl(dataUrl);
+      setImageUrlInput('');
+    } finally {
+      setIsReadingImage(false);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,7 +112,7 @@ export default function AddDreamModal({ category, onClose, onAdd }: AddDreamModa
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. Master React & Next.js"
-                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] focus:outline-none focus:border-[#A855F7] transition-colors"
+                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] text-[#000000] focus:outline-none focus:border-[#A855F7] transition-colors"
                 required
               />
             </div>
@@ -101,7 +125,7 @@ export default function AddDreamModal({ category, onClose, onAdd }: AddDreamModa
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Add details about this dream..."
                 rows={3}
-                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] focus:outline-none focus:border-[#A855F7] transition-colors resize-none"
+                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] text-[#000000] focus:outline-none focus:border-[#A855F7] transition-colors resize-none"
               />
             </div>
 
@@ -116,35 +140,77 @@ export default function AddDreamModal({ category, onClose, onAdd }: AddDreamModa
                 value={affirmation}
                 onChange={(e) => setAffirmation(e.target.value)}
                 placeholder="e.g. I am a reference in Front-end and Design"
-                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] focus:outline-none focus:border-[#A855F7] transition-colors"
+                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] text-[#000000] focus:outline-none focus:border-[#A855F7] transition-colors"
               />
               <p className="text-[12px] text-[#6B7280] mt-[8px]">
                 A present-tense sentence as if you already achieved it
               </p>
             </div>
 
-            {/* Image URL */}
+            {/* Image */}
             <div>
               <label className="flex items-center gap-[8px] text-[14px] font-semibold text-[#374151] mb-[8px]">
                 <ImageIcon size={16} style={{ color: category.color }} />
-                Image URL (optional)
+                Image (optional)
               </label>
-              <input
-                type="url"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://example.com/image.jpg"
-                className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] focus:outline-none focus:border-[#A855F7] transition-colors"
-              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-[12px]">
+                <div>
+                  <p className="text-[12px] text-[#6B7280] mb-[6px]">Upload photo</p>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.currentTarget.files?.[0] ?? null;
+                      void handleImageFileChange(file);
+                      e.currentTarget.value = '';
+                    }}
+                    className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] text-[#000000] focus:outline-none focus:border-[#A855F7] transition-colors bg-[#FFFFFF]"
+                  />
+                  <p className="text-[12px] text-[#6B7280] mt-[6px]">Max 2MB (stored in your browser)</p>
+                </div>
+
+                <div>
+                  <p className="text-[12px] text-[#6B7280] mb-[6px]">Or paste an URL</p>
+                  <input
+                    type="url"
+                    value={imageUrlInput}
+                    onChange={(e) => {
+                      const next = e.target.value;
+                      setImageUrlInput(next);
+                      setImageUrl(next);
+                    }}
+                    placeholder="https://example.com/image.jpg"
+                    className="w-full px-[16px] py-[12px] border-[2px] border-[#D1D5DB] rounded-[12px] text-[#000000] focus:outline-none focus:border-[#A855F7] transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between mt-[10px]">
+                <p className="text-[12px] text-[#6B7280]">{isReadingImage ? 'Loading image…' : ' '}</p>
+                {imageUrl && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImageUrl('');
+                      setImageUrlInput('');
+                    }}
+                    className="text-[12px] font-semibold text-[#6B7280] hover:text-[#111827]"
+                  >
+                    Remove image
+                  </button>
+                )}
+              </div>
+
               {imageUrl && (
                 <div className="mt-[12px] rounded-[12px] overflow-hidden border-[2px] border-[#D1D5DB]">
                   <img
                     src={imageUrl}
                     alt="Preview"
                     className="w-full h-[192px] object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = '';
-                      e.currentTarget.style.display = 'none';
+                    onError={() => {
+                      setImageUrl('');
+                      setImageUrlInput('');
                     }}
                   />
                 </div>
@@ -161,25 +227,25 @@ export default function AddDreamModal({ category, onClose, onAdd }: AddDreamModa
                 <li>• Review your dreams regularly</li>
               </ul>
             </div>
-          </form>
 
-          {/* Footer */}
-          <div className="bg-[#F9FAFB] px-[24px] py-[16px] flex items-center justify-end gap-[12px] border-t border-[#E5E7EB]">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-[24px] py-[12px] bg-[#FFFFFF] border-[2px] border-[#D1D5DB] text-[#374151] rounded-[12px] font-semibold hover:bg-[#F3E4FF] transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className={`px-[24px] py-[12px] bg-gradient-to-r ${category.gradient} text-[#FFFFFF] rounded-[12px] font-semibold hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] transition-all flex items-center gap-[8px]`}
-            >
-              <Save size={18} />
-              Add Dream
-            </button>
-          </div>
+            {/* Footer */}
+            <div className="bg-[#F9FAFB] px-[24px] py-[16px] flex items-center justify-end gap-[12px] border-t border-[#E5E7EB]">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-[24px] py-[12px] bg-[#FFFFFF] border-[2px] border-[#D1D5DB] text-[#374151] rounded-[12px] font-semibold hover:bg-[#F3E4FF] transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className={`px-[24px] py-[12px] bg-gradient-to-r ${category.gradient} text-[#FFFFFF] rounded-[12px] font-semibold hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] transition-all flex items-center gap-[8px]`}
+              >
+                <Save size={18} />
+                Add Dream
+              </button>
+            </div>
+          </form>
         </motion.div>
       </div>
     </AnimatePresence>
