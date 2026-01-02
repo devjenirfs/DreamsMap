@@ -10,9 +10,7 @@ import EditDreamModal from '@/components/modal/EditDreamModal';
 import Footer from '@/components/layout/Footer/footer';
 
 import type { Category, Dream } from '@/lib/types';
-import { initialCategories } from '@/lib/seed';
-
-const CATEGORIES_STORAGE_KEY = 'dreams.categories.v1';
+import { CATEGORIES_STORAGE_KEY, initialCategories, wallpaperPhrases } from '@/lib/seed';
 
 export default function DreamsMap() {
   const [categories, setCategories] = useState<Category[]>(initialCategories);
@@ -182,7 +180,13 @@ export default function DreamsMap() {
   };
 
   if (viewMode === 'wallpaper') {
-    return <WallpaperView categories={categories} onBack={() => setViewMode('dashboard')} />;
+    return (
+      <WallpaperView
+        categories={categories}
+        onBack={() => setViewMode('dashboard')}
+        phrases={wallpaperPhrases}
+      />
+    );
   }
 
   return (

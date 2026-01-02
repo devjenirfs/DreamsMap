@@ -1,5 +1,13 @@
 import type { Category } from '@/lib/types';
 
+export const CATEGORIES_STORAGE_KEY = 'dreams.categories.v2';
+
+export const wallpaperPhrases = {
+  headline: 'I am the architect\nof my destiny',
+  subheadline: 'All my dreams come true',
+  badge: '2026 - My Year',
+} as const;
+
 export const initialCategories: Category[] = [
   {
     id: 'career',
