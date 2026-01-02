@@ -37,24 +37,26 @@ export default function CategorySection({
       className="bg-[#FFFFFFCC] backdrop-blur-[20px] rounded-[20px] shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-[#FFFFFF80] overflow-hidden"
     >
       {/* Header */}
-      <div className={`bg-gradient-to-r ${category.gradient} p-[24px]`}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-[16px]">
-            <span className="text-[32px]">{category.emoji}</span>
+      <div className={`bg-gradient-to-r ${category.gradient} p-[16px] sm:p-[24px]`}>
+        <div className="flex flex-col gap-[16px] sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start sm:items-center gap-[12px] sm:gap-[16px] min-w-0">
+            <span className="text-[24px] sm:text-[32px] shrink-0">{category.emoji}</span>
             <div>
-              <h2 className="text-[24px] font-bold text-[#FFFFFF]">{category.title}</h2>
-              <p className="text-[#FFFFFFE6] text-[14px] mt-[4px]">
+              <h2 className="text-[18px] sm:text-[24px] font-bold text-[#FFFFFF] break-words">
+                {category.title}
+              </h2>
+              <p className="text-[#FFFFFFE6] text-[12px] sm:text-[14px] mt-[4px]">
                 {completedCount} of {totalCount} achieved
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-[12px]">
+          <div className="flex items-center gap-[8px] sm:gap-[12px] flex-wrap justify-start sm:justify-end">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onToggleCollapse}
-              className="bg-[#FFFFFF33] hover:bg-[#FFFFFF4D] backdrop-blur-[20px] text-[#FFFFFF] w-[40px] h-[40px] rounded-full flex items-center justify-center transition-colors border border-[#FFFFFF4D]"
+              className="bg-[#FFFFFF33] hover:bg-[#FFFFFF4D] backdrop-blur-[20px] text-[#FFFFFF] w-[36px] h-[36px] sm:w-[40px] sm:h-[40px] rounded-full flex items-center justify-center transition-colors border border-[#FFFFFF4D]"
               aria-label={isCollapsed ? 'Expand category' : 'Collapse category'}
               title={isCollapsed ? 'Expand category' : 'Collapse category'}
             >
@@ -65,17 +67,17 @@ export default function CategorySection({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onAddDream}
-              className="bg-[#FFFFFF33] hover:bg-[#FFFFFF4D] backdrop-blur-[20px] text-[#FFFFFF] px-[16px] py-[8px] rounded-full flex items-center gap-[8px] transition-colors border border-[#FFFFFF4D]"
+              className="bg-[#FFFFFF33] hover:bg-[#FFFFFF4D] backdrop-blur-[20px] text-[#FFFFFF] px-[12px] sm:px-[16px] py-[8px] rounded-full flex items-center gap-[8px] transition-colors border border-[#FFFFFF4D]"
             >
               <Plus size={20} />
-              <span className="font-semibold">Add Dream</span>
+              <span className="hidden sm:inline font-semibold">Add Dream</span>
             </motion.button>
 
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onEditCategory}
-              className="bg-[#FFFFFF33] hover:bg-[#FFFFFF4D] backdrop-blur-[20px] text-[#FFFFFF] w-[40px] h-[40px] rounded-full flex items-center justify-center transition-colors border border-[#FFFFFF4D]"
+              className="bg-[#FFFFFF33] hover:bg-[#FFFFFF4D] backdrop-blur-[20px] text-[#FFFFFF] w-[36px] h-[36px] sm:w-[40px] sm:h-[40px] rounded-full flex items-center justify-center transition-colors border border-[#FFFFFF4D]"
               aria-label="Edit category"
               title="Edit category"
             >
@@ -90,7 +92,7 @@ export default function CategorySection({
                   onDeleteCategory();
                 }
               }}
-              className="bg-[#FFFFFF33] hover:bg-[#FFFFFF4D] backdrop-blur-[20px] text-[#FFFFFF] w-[40px] h-[40px] rounded-full flex items-center justify-center transition-colors border border-[#FFFFFF4D]"
+              className="bg-[#FFFFFF33] hover:bg-[#FFFFFF4D] backdrop-blur-[20px] text-[#FFFFFF] w-[36px] h-[36px] sm:w-[40px] sm:h-[40px] rounded-full flex items-center justify-center transition-colors border border-[#FFFFFF4D]"
               aria-label="Remove category"
               title="Remove category"
             >
@@ -100,7 +102,7 @@ export default function CategorySection({
         </div>
 
         {/* Progress Bar */}
-        <div className="mt-[16px] bg-[#FFFFFF33] rounded-full h-[12px] overflow-hidden backdrop-blur-[20px]">
+        <div className="mt-[12px] sm:mt-[16px] bg-[#FFFFFF33] rounded-full h-[10px] sm:h-[12px] overflow-hidden backdrop-blur-[20px]">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
@@ -112,15 +114,15 @@ export default function CategorySection({
 
       {/* Dreams Grid */}
       {!isCollapsed && (
-        <div className="p-[24px]">
+        <div className="p-[16px] sm:p-[24px]">
           {category.dreams.length === 0 ? (
-            <div className="text-center py-[48px]">
-              <p className="text-[#9CA3AF] text-[18px]">
+            <div className="text-center py-[32px] sm:py-[48px]">
+              <p className="text-[#9CA3AF] text-[16px] sm:text-[18px]">
                 Add your first dream to this category ✨
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-[16px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-[16px]">
               {category.dreams.map((dream, index) => (
                 <DreamCard
                   key={dream.id}

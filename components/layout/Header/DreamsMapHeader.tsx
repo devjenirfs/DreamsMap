@@ -37,9 +37,9 @@ export function DreamsMapHeader({ onWallpaperClick, onAddCategoryClick }: Dreams
       animate={{ opacity: 1, y: 0 }}
       className="bg-[#FFFFFFCC] backdrop-blur-[12px] border-b border-[#E5E7EB] sticky top-0 z-50 shadow-[0_2px_4px_rgba(0,0,0,0.05)]"
     >
-      <div className="container mx-auto px-[16px] py-[24px] max-w-[1600px]">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-[16px]">
+      <div className="container mx-auto px-[16px] py-[16px] sm:py-[24px] max-w-[1600px]">
+        <div className="flex flex-col gap-[16px] sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-[12px] sm:gap-[16px]">
             <div className="relative">
               <motion.div
                 animate={{
@@ -50,7 +50,7 @@ export function DreamsMapHeader({ onWallpaperClick, onAddCategoryClick }: Dreams
                   repeat: Infinity,
                   repeatDelay: 3,
                 }}
-                className="text-[32px]"
+                className="text-[24px] sm:text-[32px]"
               >
                 ✨
               </motion.div>
@@ -67,25 +67,25 @@ export function DreamsMapHeader({ onWallpaperClick, onAddCategoryClick }: Dreams
               />
             </div>
             <div>
-              <h1 className="text-[32px] font-bold bg-gradient-to-r from-[#A855F7] via-[#DB2777] to-[#2563EB] bg-clip-text text-transparent">
+              <h1 className="text-[22px] sm:text-[32px] font-bold bg-gradient-to-r from-[#A855F7] via-[#DB2777] to-[#2563EB] bg-clip-text text-transparent">
                 My Dream Map
               </h1>
-              <p className="text-[#4B5563] text-[14px] mt-[4px]">
+              <p className="hidden sm:block text-[#4B5563] text-[14px] mt-[4px]">
                 Visualize, affirm, and achieve your goals
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-[12px]">
+          <div className="flex items-center gap-[8px] sm:gap-[12px] flex-wrap justify-end">
             {onAddCategoryClick && (
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onAddCategoryClick}
-                className="flex items-center gap-[8px] bg-[#FFFFFF] border border-[#F3E8FF] text-[#111827] px-[16px] py-[8px] rounded-full shadow-sm"
+                className="flex items-center gap-[8px] bg-[#FFFFFF] border border-[#F3E8FF] text-[#111827] px-[12px] sm:px-[16px] py-[8px] rounded-full shadow-sm"
               >
                 <Plus size={18} />
-                <span className="font-semibold">Add Category</span>
+                <span className="hidden sm:inline font-semibold">Add Category</span>
               </motion.button>
             )}
             {onWallpaperClick && (
@@ -93,15 +93,15 @@ export function DreamsMapHeader({ onWallpaperClick, onAddCategoryClick }: Dreams
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onWallpaperClick}
-                className="flex items-center gap-[8px] bg-gradient-to-r from-[#6366F1] to-[#A855F7] text-[#FFFFFF] px-[16px] py-[8px] rounded-full shadow-[0_4px_15px_rgba(99,102,241,0.4)]"
+                className="flex items-center gap-[8px] bg-gradient-to-r from-[#6366F1] to-[#A855F7] text-[#FFFFFF] px-[12px] sm:px-[16px] py-[8px] rounded-full shadow-[0_4px_15px_rgba(99,102,241,0.4)]"
               >
                 <Wallpaper size={18} />
-                <span className="font-semibold">View Wallpaper</span>
+                <span className="hidden sm:inline font-semibold">View Wallpaper</span>
               </motion.button>
             )}
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-[8px] bg-gradient-to-r from-[#A855F7] to-[#EC4899] text-[#FFFFFF] px-[16px] py-[8px] rounded-full shadow-[0_4px_15px_rgba(219,39,119,0.4)]"
+              className="hidden md:flex items-center gap-[8px] bg-gradient-to-r from-[#A855F7] to-[#EC4899] text-[#FFFFFF] px-[16px] py-[8px] rounded-full shadow-[0_4px_15px_rgba(219,39,119,0.4)]"
             >
               <Star size={18} fill="currentColor" />
               <span className="font-semibold">Your best is yet to come</span>
